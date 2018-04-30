@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <title>Palette Picker</title>
+</head>
+<body>
+  <header>
+    <h1>Palette Picker Ahoy!</h1>
+  </header>
+  <main>
+    <section class="main-palette">
+      <article class="palette">
+        
+      </article>
+      <form class="palette-form">
+        <input 
+          id="new-palette"
+          type="submit" 
+          name="new-palette" 
+          value="Generate New Palette">
+        <select class="project-dropdown">
+          
+        </select>
+        <input
+          id="palette-name" 
+          type="text" 
+          name="palette-name"
+          placeholder="Palette name">
+        <input 
+          id="save-palette"
+          type="submit" 
+          name="save-palette"
+          value="Save Palette">
+      </form>
+    </section>
+    <section class="projects">
+      <form class="project-form">
+        <label for="new-project">
+          Create a new Project
+        </label>
+        <input 
+          id="new-project"
+          type="text" 
+          name="new-project"
+          placeholder="New Project Name">
+        <input
+          id="save-project" 
+          type="submit" 
+          name="save-project"
+          value="Save Project">  
+      </form>
+      <section class="projects-container">
+        
+      </section>
+    </section>
+  </main>
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="js/hexGenerator.js"></script>
+<script type="text/javascript" src="js/scripts.js"></script>
+</html>

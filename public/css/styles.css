@@ -1,0 +1,11 @@
+.palette {
+  margin: auto;
+  height: 200px;
+  width: 95%;
+}
+
+.main-palette-color {
+  display: inline-block;
+  height: 200px;
+  width: 20%;
+}
