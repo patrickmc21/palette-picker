@@ -57,12 +57,15 @@ app.post('/api/v1/projects/:project_id/palette', (req, res) => {
 });
 
 app.delete('/api/v1/projects/:id', (req, res) => {
-
+  const { id } = req.params;
+  db('projects').where('id', id).del()
+    .then(id => res.sendStatus(204))
+    .catch(error => res.status(404).send({message: 'project not found'}));
 });
 
-app.delete('/api/v1/palette/:palette_id', (req, res) => {
-  const { id } = req.params;
-  db('palettes').where('id', id).del()
+app.delete('/api/v1/projects/:project_id/palette/:paletteId', (req, res) => {
+  const { paletteId, project_id } = req.params;
+  db('palettes').where({id: paletteId, project_id}).del()
     .then(palette => {
       res.sendStatus(204)
     })

@@ -40,12 +40,14 @@ function updatePalette(e) {
 
 async function addProject(e) {
   e.preventDefault();
-  const project = $('#new-project').val();
-  palette.projects[project] = {name: project, palettes: []};
-  const id = await postProject(palette.projects[project]);
-  palette.projects[project] = {name: project, palettes: [], id: id};
-  appendProject(project);
-  $('#new-project').val('');
+  if ($('#new-project').val().length > 0) {
+    const project = $('#new-project').val();
+    palette.projects[project] = {name: project, palettes: []};
+    const { id } = await postProject(palette.projects[project]);
+    palette.projects[project] = {name: project, palettes: [], id: id};
+    appendProject(project);
+    $('#new-project').val('');
+  }
 };
 
 function appendProject(project) {
@@ -58,21 +60,25 @@ function appendProject(project) {
   );
 };
 
-function savePalette(e) {
+async function savePalette(e) {
   e.preventDefault();
-  const newPalette = {
-    name: $('#palette-name').val(),
-    colors: palette.colors.map(color => color.color)
-  };
-  const project = $('.project-dropdown').val();
-  palette.projects[project].palettes.push(newPalette);
-  appendSavedPalette(newPalette, project);
-  $('#palette-name').val('');
+  if ($('#palette-name').val().length > 0) {
+    const newPalette = {
+      name: $('#palette-name').val(),
+      colors: palette.colors.map(color => color.color)
+    };
+    const project = $('.project-dropdown').val();
+    const paletteId = await postPalette(newPalette, project);
+
+    palette.projects[project].palettes.push({...newPalette, id: paletteId});
+    appendSavedPalette(newPalette, project);
+    $('#palette-name').val('');
+  }
 };
 
 function appendSavedPalette(palette, project) {
   $(`.${project}`).append(
-    `<li class="saved-palette" data-name=${palette.name} data-project=${project}>
+    `<li class="saved-palette" data-id=${palette.id} data-project=${project}>
       <h4 class="palette-name">${palette.name}</h4>
       <div class="small-palette">
         <div class="small-palette-color" style="background-color: ${palette.colors[0]}"></div>
@@ -88,8 +94,8 @@ function appendSavedPalette(palette, project) {
 }
 
 function highlightPalette() {
-  const { name, project } = $(this).parent().data();
-  const highlightedPalette = palette.projects[project].palettes.find(color => color.name === name);
+  const { id, project } = $(this).parent().data();
+  const highlightedPalette = palette.projects[project].palettes.find(color => color.id === id);
   highlightedPalette.colors.forEach((color, i) => {
     palette.colors[i].color = color;
     appendPalette();
@@ -97,11 +103,15 @@ function highlightPalette() {
 };
 
 function removePalette() {
-  const { name, project } = $(this).parent().data();
-  const palettes = palette.projects[project].palettes.filter(color => color.name !== name);
+  const { id, project } = $(this).parent().data();
+  console.log(id);
+  console.log($(this).parent().data())
+  const project_id = palette.projects[project].id;
+  const palettes = palette.projects[project].palettes.filter(color => color.id !== id);
   palette.projects[project].palettes = palettes;
   $(`.${project}`).empty();
   palettes.forEach(color => appendSavedPalette(color, project));
+  deletePalette(id, project_id);
 };
 
 async function getProjects() {
@@ -116,12 +126,33 @@ async function getProjects() {
 
 async function populateProjects() {
   const projects = await getProjects();
-  console.log(projects)
-  projects.forEach(project => {
-    palette.projects[project] = {name: project.name, palettes: [], id: project.id};
+  projects.forEach(async project => {
+    const palettes = await populatePalettes(project.id);
+    palette.projects[project.name] = {name: project.name, palettes: palettes, id: project.id};
     appendProject(project.name);
+    palettes.forEach(palette => {
+      appendSavedPalette(palette, project.name)
+    })
   });
 };
+
+async function populatePalettes(project_id) {
+  const palettes = await getPalettes(project_id);
+  const paletteObjs = palettes.map(palette => {
+    return {
+      name: palette.name,
+      id: palette.id,
+      colors: [
+        palette.color1,
+        palette.color2,
+        palette.color3,
+        palette.color4,
+        palette.color5,
+      ]
+    }
+  })
+  return Promise.all(paletteObjs);
+}
 
 async function postProject(project) {
   const url = '/api/v1/projects';
@@ -136,9 +167,61 @@ async function postProject(project) {
   };
   try {
     const response = await fetch(url, options);
-    console.log(response);
+    return response.json();
   } catch (error) {
     console.log(error);
+  }
+};
+
+async function getPalettes(project_id) {
+  const url = `/api/v1/projects/${project_id}/palettes`;
+
+  try {
+    const response = await fetch(url);
+    return response.json();
+  } catch (error) {
+    console.log(error);
+  };
+}
+
+async function postPalette(savedPalette, project) {
+  const project_id = palette.projects[project].id;
+  const paletteObj = {
+    name: savedPalette.name,
+    color1: savedPalette.colors[0],
+    color2: savedPalette.colors[1],
+    color3: savedPalette.colors[2],
+    color4: savedPalette.colors[3],
+    color5: savedPalette.colors[4]
+  };
+
+  const url = `/api/v1/projects/${project_id}/palette`;
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(paletteObj),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  try {
+    const response = await fetch(url, options);
+    return response.json();
+  } catch (error) {
+    console.log(error)
+  }
+};
+
+function deletePalette(paletteId, project_id) {
+  const url = `/api/v1/projects/${project_id}/palette/${paletteId}`;
+  const options = {
+    method: 'DELETE'
+  }
+
+  try {
+    fetch(url, options);
+  } catch (error) {
+    console.log(error)
   }
 }
 
