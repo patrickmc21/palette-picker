@@ -1,11 +1,13 @@
 const palette = new PalettePicker();
 
+window.onload = populateProjects();
 $('.palette').on('click', '.save-color', toggleColor);
 $('#new-palette').on('click', updatePalette);
 $('#save-project').on('click', addProject);
 $('#save-palette').on('click', savePalette);
 $('.projects-container').on('click', '.palette-name, .small-palette', highlightPalette);
 $('.projects-container').on('click', '.remove-palette', removePalette);
+
 
 palette.generatePalette();
 appendPalette();
@@ -36,10 +38,17 @@ function updatePalette(e) {
   appendPalette();
 };
 
-function addProject(e) {
+async function addProject(e) {
   e.preventDefault();
   const project = $('#new-project').val();
   palette.projects[project] = {name: project, palettes: []};
+  const id = await postProject(palette.projects[project]);
+  palette.projects[project] = {name: project, palettes: [], id: id};
+  appendProject(project);
+  $('#new-project').val('');
+};
+
+function appendProject(project) {
   $('.project-dropdown').append(`<option value="${project}">${project}</option>`);
   $('.projects-container').append(
     `<article>
@@ -47,7 +56,6 @@ function addProject(e) {
       <ul class="${project}"></ul>
     </article>`
   );
-  $('#new-project').val('');
 };
 
 function savePalette(e) {
@@ -96,7 +104,43 @@ function removePalette() {
   palettes.forEach(color => appendSavedPalette(color, project));
 };
 
+async function getProjects() {
+  const url = '/api/v1/projects';
+  try {
+    const response = await fetch(url);
+    return response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
+async function populateProjects() {
+  const projects = await getProjects();
+  console.log(projects)
+  projects.forEach(project => {
+    palette.projects[project] = {name: project.name, palettes: [], id: project.id};
+    appendProject(project.name);
+  });
+};
+
+async function postProject(project) {
+  const url = '/api/v1/projects';
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      name: project.name
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  try {
+    const response = await fetch(url, options);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
 
