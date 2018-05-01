@@ -1,6 +1,7 @@
-class Palette {
+class PalettePicker {
   constructor() {
     this.colors = [];
+    this.projects = {};
   }
 
   generatePalette() {

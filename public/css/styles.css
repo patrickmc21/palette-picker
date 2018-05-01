@@ -9,3 +9,45 @@
   height: 200px;
   width: 20%;
 }
+
+.projects-container {
+  display: flex;
+  justify-content: left;
+  width: 98%;
+}
+
+.projects-container article {
+  margin: 2%;
+  width: 20%;
+}
+
+.saved-palette {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.palette-name {
+  margin: 0;
+  font-size: 20px;
+}
+
+.small-palette {
+  display: flex;
+  height: 20px;
+  width: 120px;
+}
+
+.small-palette-color {
+  display: inline-block;
+  margin: 0;
+  height: 20px;
+  width: 20px;
+}
+
+.remove-palette {
+  display: inline-block;
+  height: 20px;
+  width: 30px;
+}
+
