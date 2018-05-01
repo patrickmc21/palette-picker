@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="https://fonts.googleapis.com/css?family=Armata|Denk+One" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/styles.css">
-  <title>Palette Picker</title>
+  <title>Paaaalettes</title>
 </head>
 <body>
   <header>
-    <h1>Palette Picker Ahoy!</h1>
+    <h1>Paaaalettes</h1>
   </header>
   <main>
     <section class="main-palette">
@@ -18,8 +19,9 @@
           id="new-palette"
           type="submit" 
           name="new-palette" 
-          value="Generate New Palette">
-        <select class="project-dropdown">
+          value="New Palette">
+        <label for="projects">Select Project</label>
+        <select id="projects" class="project-dropdown">
           
         </select>
         <input
@@ -37,7 +39,7 @@
     <section class="projects">
       <form class="project-form">
         <label for="new-project">
-          Create a new Project
+          Create New Project
         </label>
         <input 
           id="new-project"

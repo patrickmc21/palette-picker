@@ -18,8 +18,8 @@ function appendPalette() {
     const { color, saved } = palette.colors[i];
     paletteCards.push(
       `<div class="main-palette-color" style="background-color: ${color}" data-saved=${saved} data-color=${color} data-index=${i}>
-        <button class="save-color">Save</button>
         <h2 class="palette-card-color">${color}</h2>
+        <button class="save-color ${saved ? 'saved' : ''}"></button>
       </div>`
     )
   }
@@ -29,14 +29,25 @@ function appendPalette() {
 
 function toggleColor() {
   const index = $(this).parent('.main-palette-color').data('index');
+  $(this).toggleClass('saved');
   palette.toggleColor(index);
 };
 
 function updatePalette(e) {
   e.preventDefault();
+  animateUpdate(this);
   palette.updatePalette()
   appendPalette();
 };
+
+function animateUpdate(button) {
+  $(button).animate({"color":"#3c444e"}, 1, function(){
+        $(button).val('...Generating');
+    });
+    $(button).animate({"color":"#3c444e"}, 300, function(){
+        $(button).val('New Palette');
+    });
+}
 
 async function addProject(e) {
   e.preventDefault();
@@ -63,6 +74,12 @@ function appendProject(project) {
 async function savePalette(e) {
   e.preventDefault();
   if ($('#palette-name').val().length > 0) {
+    $(this).animate({"color":"#3c444e"}, 1, function(){
+        $(this).val('...Saving');
+    });
+    $(this).animate({"color":"#3c444e"}, 500, function(){
+        $(this).val('Save Palette');
+    });
     const newPalette = {
       name: $('#palette-name').val(),
       colors: palette.colors.map(color => color.color)

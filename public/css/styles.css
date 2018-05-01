@@ -1,53 +1,208 @@
+/*font-family: 'Denk One', sans-serif;
+font-family: 'Armata', sans-serif;*/
+
+/*https://dribbble.com/shots/2839483-Save-Button-Animation*/
+body {
+  background-color: #F1F9F0;
+}
+
+h1 {
+  color: #1d3540;
+  font-family: 'Denk One', sans-serif;
+  font-size: 56px;
+  text-align: center;
+}
+
+.main-palette {
+  border-bottom: 1px solid #1d3540;
+  margin-bottom: 20px;
+  height: 540px;
+}
+
 .palette {
-  margin: auto;
-  height: 200px;
+  margin: 0 auto 40px auto;
+  height: 300px;
   width: 95%;
 }
 
 .main-palette-color {
   display: inline-block;
-  height: 200px;
+  height: 300px;
   width: 20%;
+}
+
+.palette-card-color {
+  margin: 180px 0 10px 0;
+  font-family: 'Armata', sans-serif;
+  font-size: 28px;
+  text-align: center;
+}
+
+.save-color {
+  display: block;
+  border: none;
+  margin: auto;
+  height: 50px;
+  width: 50px;
+  background-color: transparent;
+  background-image: url('../images/unlocked.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.save-color.saved {
+  background-image: url('../images/locked.png');
+}
+
+.palette-form,
+.project-form {
+  margin: auto;
+  height: 100px;
+  width: 50%;
+}
+
+#new-palette {
+  display: block;
+  padding: 10px;
+  border: none;
+  border-radius: 30px;
+  margin: 0 auto 20px auto;
+  height: 60px;
+  width: 50%;
+  background-color: #1d3540;
+  color: #FFFFFF;
+  font-family: 'Armata', sans-serif;
+  font-size: 28px;
+}
+
+#new-palette:hover,
+#save-palette:hover,
+#save-project:hover {
+  background-color: #0a161b;
+}
+
+label {
+  font-family: 'Armata', sans-serif;
+  font-size: 24px;
+}
+
+#projects {
+  margin: 0 10px 0 10px;
+  width: 20%;
+  background-color: transparent;
+  color: #1d3540;
+  font-family: 'Armata', sans-serif;
+  font-size: 24px;
+}
+
+#palette-name {
+  margin: 0 10px 0 10px;
+  border-radius: 5px;
+  width: 40%;
+  background-color: transparent;
+  color: #1d3540;
+  font-family: 'Armata', sans-serif;
+  font-size: 24px;
+}
+
+#palette-name::placeholder,
+#new-project::placeholder {
+  color: #1d3540;
+}
+
+#save-palette,
+#save-project {
+  display: block;
+  padding: 6px;
+  border: none;
+  border-radius: 30px;
+  margin: 10px auto 0 auto;
+  height: 40px;
+  width: 30%;
+  background-color: #1d3540;
+  color: #FFFFFF;
+  font-family: 'Armata', sans-serif;
+  font-size: 24px;
+}
+
+.project-form {
+  margin-bottom: 30px;
+}
+
+.project-form label {
+  display: block;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+#new-project {
+  display: block;
+  margin: auto;
+  border-radius: 5px;
+  width: 40%;
+  background-color: transparent;
+  color: #1d3540;
+  font-family: 'Armata', sans-serif;
+  font-size: 24px;
 }
 
 .projects-container {
   display: flex;
   justify-content: left;
-  width: 98%;
+  flex-wrap: wrap;
+  margin: auto;
+  width: 95%;
 }
 
 .projects-container article {
-  margin: 2%;
-  width: 20%;
+  margin: 1%;
+  width: 300px;
+}
+
+h3 {
+  font-family: 'Denk One', sans-serif;
+  text-transform: uppercase;
+}
+
+.projects-container ul {
+  width: 270px;
 }
 
 .saved-palette {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 140px 40px; 
+  font-family: 'Armata', sans-serif;
   list-style: none;
 }
 
 .palette-name {
   margin: 0;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .small-palette {
   display: flex;
-  height: 20px;
-  width: 120px;
+  height: 24px;
+  width: 140px;
 }
 
 .small-palette-color {
   display: inline-block;
   margin: 0;
-  height: 20px;
-  width: 20px;
+  height: 24px;
+  width: 24px;
 }
 
 .remove-palette {
   display: inline-block;
-  height: 20px;
+  border: none;
+  background-color: transparent;
+  height: 24px;
   width: 30px;
+  font-size: 22px;
+}
+
+.remove-palette:hover {
+  color: #F72025;
 }
 
