@@ -48,6 +48,7 @@ describe('API Routes', () => {
         response.should.be.json;
         response.body.should.be.a('array');
         response.body[0].should.have.property('name');
+        response.body[0].name.should.equal('mountain');
         response.body[0].should.have.property('id');
         done();
       })
@@ -63,13 +64,20 @@ describe('API Routes', () => {
         response.should.be.json;
         response.body.should.be.a('array');
         response.body[0].should.have.property('name');
+        response.body[0].name.should.equal('warm');
         response.body[0].should.have.property('id');
         response.body[0].should.have.property('color1');
+        response.body[0].color1.should.equal('red');
         response.body[0].should.have.property('color2');
+        response.body[0].color2.should.equal('white');
         response.body[0].should.have.property('color3');
+        response.body[0].color3.should.equal('blue');
         response.body[0].should.have.property('color4');
+        response.body[0].color4.should.equal('green');
         response.body[0].should.have.property('color5');
+        response.body[0].color5.should.equal('orange');
         response.body[0].should.have.property('project_id');
+        response.body[0].project_id.should.equal(1);
         done();
       })
     });
@@ -80,7 +88,7 @@ describe('API Routes', () => {
       chai.request(app)
       .post('/api/v1/projects')
       .send({
-        name: 'Warm'
+        name: 'warm'
       })
       .end((error, response) => {
         response.should.have.status(201);
@@ -103,9 +111,44 @@ describe('API Routes', () => {
     });
   });
 
-  describe.skip('POST /api/v1/projects/:project_id/palette', () => {
+  describe('POST /api/v1/projects/:project_id/palette', () => {
     it('should post a palette to a project', (done ) => {
-      
+      chai.request(app)
+        .post('/api/v1/projects/1/palette')
+        .send({
+          name:'fun',
+          color1: 'purple',
+          color2: 'teal',
+          color3: 'flannel',
+          color4: 'plaid',
+          color5: 'camo'
+        })
+        .end((error, response) => {
+          response.should.have.status(201);
+          response.should.be.json;
+          response.should.be.a('object');
+          response.body.should.have.property('id');
+          response.body.id.should.equal(3);
+          done();
+        });
+    });
+
+    it('should not post a palette if body incomplete', (done) => {
+      chai.request(app)
+        .post('/api/v1/projects/1/palette')
+        .send({
+          name:'fun',
+          color1: null,
+          color2: 'teal',
+          color3: 'flannel',
+          color4: 'plaid',
+          color5: 'camo'
+        })
+        .end((error, response) => {
+          response.should.have.status(422);
+          response.body.error.should.equal('Please include a valid palette');
+          done();
+        });
     });
   });
 });

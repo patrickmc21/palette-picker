@@ -51,13 +51,18 @@ app.post('/api/v1/projects', (req, res) => {
 app.post('/api/v1/projects/:project_id/palette', (req, res) => {
   const { project_id } = req.params;
   const palette = req.body;
-  db('palettes').insert({...palette, project_id}, 'id')
-    .then(palette => {
-      res.status(201).json({id: palette[0] })
-    })
-    .catch(error => {
-      res.status(500).send('Error posting palette');
-    });
+  const { name, color1, color2, color3, color4, color5 } = palette;
+  if (name && color1 && color2 && color3 && color4 && color5) {
+    db('palettes').insert({...palette, project_id}, 'id')
+      .then(palette => {
+        res.status(201).json({id: palette[0] })
+      })
+      .catch(error => {
+        res.status(500).send('Error posting palette');
+      });
+  } else {
+    res.status(422).send({error: 'Please include a valid palette'});
+  }
 });
 
 app.delete('/api/v1/projects/:id', (req, res) => {
