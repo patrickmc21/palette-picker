@@ -169,7 +169,7 @@ label {
 
 .projects-container article {
   margin: 1%;
-  width: 300px;
+  width: 310px;
 }
 
 h3 {
@@ -186,7 +186,6 @@ h3 {
 .saved-palette {
   display: grid;
   grid-template-columns: 100px 125px 30px;
-  border-bottom: 1px solid #1d3540;
   margin-bottom: 5px;
   font-family: 'Armata', sans-serif;
   list-style: none;

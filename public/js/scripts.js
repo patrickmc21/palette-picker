@@ -90,9 +90,9 @@ async function savePalette(e) {
     };
     const project = $('.project-dropdown').val();
     const paletteId = await postPalette(newPalette, project);
-
-    palette.projects[project].palettes.push({...newPalette, id: paletteId});
-    appendSavedPalette(newPalette, project);
+    console.log(paletteId.id)
+    palette.projects[project].palettes.push({...newPalette, id: paletteId.id});
+    appendSavedPalette({...newPalette, id: paletteId.id}, project);
     $('#palette-name').val('');
   }
 };

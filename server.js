@@ -62,7 +62,7 @@ app.post('/api/v1/projects/:project_id/palette', (req, res) => {
 
 app.delete('/api/v1/projects/:id', (req, res) => {
   const { id } = req.params;
-  
+
   db('projects').where('id', id).del()
     .then(id => res.sendStatus(204))
     .catch(error => res.status(404).send({message: 'project not found'}));
@@ -82,3 +82,5 @@ app.delete('/api/v1/palette/:id', (req, res) => {
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
+
+module.exports = { app, db };

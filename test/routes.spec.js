@@ -1,52 +1,64 @@
 const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
-const server = require('../server');
+
+const { app, db } = require('../server');
 
 chai.use(chaiHttp);
 
 describe('Client Routes', () => {
-  it('should return the homepage', () => {
-    return chai.request('http://localhost:3000')
+  it('should return the homepage', (done) => {
+    chai.request(app)
     .get('/')
-    .then(response => {
+    .end((error, response) => {
       response.should.have.status(200);
       response.should.be.html;
+      done();
     })
-    .catch(error => console.log(error))
   });
 
-  it('should return 404 for a route that does not exist', () => {
-    return chai.request('http://localhost:3000')
+  it('should return 404 for a route that does not exist', (done) => {
+    chai.request(app)
     .get('/sad')
-    .then(response => {
+    .end((error, response) => {
       response.should.have.status(404);
+      done();
     })
-    .catch(error => console.log(error))
   })
 });
 
 describe('API Routes', () => {
+
+  beforeEach(() => {
+    return db.migrate.rollback()
+    .then(function() {
+      return db.migrate.latest();
+    })
+    .then(function() {
+      return db.seed.run();
+    });
+  });
+
   describe('GET /api/v1/projects', () => {
-    it('should return all the projects', () => {
-      return chai.request('http://localhost:3000')
+    it('should return all the projects', (done) => {
+      chai.request(app)
       .get('/api/v1/projects')
-      .then(response => {
+      .end((error, response) => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
         response.body[0].should.have.property('name');
         response.body[0].should.have.property('id');
+        done();
       })
-      .catch(error => console.log(error))
     });
   });
 
   describe('GET /api/v1/projects/:id/palettes', () => {
-    it('should return the palettes for given project', () => {
-      return chai.request('http://localhost:3000')
-      .get('/api/v1/projects/2/palettes')
-      .then(response => {
+    it('should return the palettes for given project', (done) => {
+      chai.request(app)
+      .get('/api/v1/projects/1/palettes')
+      .end((error, response) => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
@@ -58,41 +70,41 @@ describe('API Routes', () => {
         response.body[0].should.have.property('color4');
         response.body[0].should.have.property('color5');
         response.body[0].should.have.property('project_id');
+        done();
       })
-      .catch(error => console.log(error));
     });
   });
 
   describe('POST /api/v1/projects', () => {
-    it('should post a project to the database', () => {
-      return chai.request('http://localhost:3000')
+    it('should post a project to the database', (done) => {
+      chai.request(app)
       .post('/api/v1/projects')
       .send({
         name: 'Warm'
       })
-      .then(response => {
+      .end((error, response) => {
         response.should.have.status(201);
         response.should.be.json;
         response.body.should.be.a('object');
         response.body.should.have.property('id');
+        done();
       })
-      .catch(error => console.log(error));
     });
 
-    it('should not create a project with missing name', () => {
-      return chai.request('http://localhost:3000')
+    it('should not create a project with missing name', (done) => {
+      chai.request(app)
       .post('/api/v1/projects')
       .send({})
-      .then(response => {
+      .end((error, response) => {
         response.should.have.status(422);
-        response.body.error.should.equal('Please include a project name')
+        response.body.error.should.equal('Please include a project name');
+        done();
       })
-      .catch(error => console.log(error))
     });
   });
 
-  describe('POST /api/v1/projects/:project_id/palette', () => {
-    it('should post a palette to a project', () => {
+  describe.skip('POST /api/v1/projects/:project_id/palette', () => {
+    it('should post a palette to a project', (done ) => {
       
     });
   });
