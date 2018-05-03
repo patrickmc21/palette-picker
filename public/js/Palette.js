@@ -6,8 +6,13 @@ class PalettePicker {
 
   generatePalette() {
     for (let i = 0; i < 5; i++) {
+      let color = hexGenerator();
+      while (this.colors.find(hue => hue.color === color)) {
+        color = hexGenerator();
+      };
+
       const colorObject = {
-        color: hexGenerator(),
+        color: color,
         saved: false
       }
       this.colors.push(colorObject);
