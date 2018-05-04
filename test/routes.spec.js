@@ -81,6 +81,16 @@ describe('API Routes', () => {
         done();
       })
     });
+
+    it('should return an error if project id is invalid', (done) => {
+      chai.request(app)
+      .get('/api/v1/projects/i/palettes')
+      .end((error, response) => {
+        response.should.have.status(500);
+        response.body.error.should.equal('Error retrieving palettes');
+        done();
+      });
+    });
   });
 
   describe('POST /api/v1/projects', () => {
@@ -147,6 +157,50 @@ describe('API Routes', () => {
         .end((error, response) => {
           response.should.have.status(422);
           response.body.error.should.equal('Please include a valid palette');
+          done();
+        });
+    });
+  });
+
+  describe('DELETE /api/v1/projects/:id', () => {
+    it('should delete a project', (done) => {
+      chai.request(app)
+        .delete('/api/v1/projects/2')
+        .end((error, response) => {
+          response.should.have.status(204);
+          done();
+        });
+    });
+
+    it('should not delete a project if it has palettes', (done) => {
+      chai.request(app)
+        .delete('/api/v1/projects/1')
+        .end((error, response) => {
+          response.should.have.status(404);
+          response.should.be.json;
+          response.body.message.should.equal('project not found');
+          done();
+        });
+    });
+  });
+
+  describe('DELETE /api/v1/palette/:id', () => {
+    it('should delete a palette', (done) => {
+      chai.request(app)
+        .delete('/api/v1/palette/1')
+        .end((error, response) => {
+          response.should.have.status(204);
+          done();
+        });
+    });
+
+    it('should not delete if id is invalid', (done) => {
+      chai.request(app)
+        .delete('/api/v1/palette/a')
+        .end((error, response) => {
+          response.should.have.status(404);
+          response.should.be.json;
+          response.body.message.should.equal('invalid id');
           done();
         });
     });

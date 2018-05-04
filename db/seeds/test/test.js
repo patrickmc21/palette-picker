@@ -3,7 +3,8 @@ exports.seed = function(knex, Promise) {
   return knex('projects').del()
     .then(function () {
       return knex('projects').insert([
-        {name: 'mountain'}
+        {name: 'mountain'},
+        {name: 'beach'}
       ], 'id')
       .then(project => {
         return knex('palettes').insert([

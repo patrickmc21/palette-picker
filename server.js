@@ -29,7 +29,7 @@ app.get('/api/v1/projects/:id/palettes', (req, res) => {
       res.status(200).json(palettes);
     })
     .catch((error) => {
-      res.status(500).send('Error retrieving palettes');
+      res.status(500).json({error: 'Error retrieving palettes'});
     });
 });
 
@@ -80,7 +80,7 @@ app.delete('/api/v1/palette/:id', (req, res) => {
       res.sendStatus(204)
     })
     .catch(error => {
-      res.status(404).send('palette not found')
+      res.status(404).json({message:'invalid id'})
     });
 });
 
