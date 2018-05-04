@@ -92,7 +92,7 @@ label {
   background-color: transparent;
   color: #1d3540;
   font-family: 'Armata', sans-serif;
-  font-size: 24px;
+  font-size: 28px;
 }
 
 #palette-name {
@@ -146,6 +146,19 @@ label {
   font-size: 24px;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
+.invalid-project {
+  margin: 5px 0 5px 0;
+  color: red;
+  font-family: 'Armata', sans-serif;
+  font-size: 24px;
+  text-align: center;
+  color: #870F2A;
+}
+
 .projects-container {
   display: flex;
   justify-content: left;
@@ -156,21 +169,24 @@ label {
 
 .projects-container article {
   margin: 1%;
-  width: 300px;
+  width: 310px;
 }
 
 h3 {
   font-family: 'Denk One', sans-serif;
   text-transform: uppercase;
+  font-size: 24px;
 }
 
 .projects-container ul {
+  padding: 0;
   width: 270px;
 }
 
 .saved-palette {
   display: grid;
-  grid-template-columns: auto 140px 40px; 
+  grid-template-columns: 100px 125px 30px;
+  margin-bottom: 5px;
   font-family: 'Armata', sans-serif;
   list-style: none;
 }

@@ -29,51 +29,63 @@ app.get('/api/v1/projects/:id/palettes', (req, res) => {
       res.status(200).json(palettes);
     })
     .catch((error) => {
-      res.status(500).send('Error retrieving palettes');
+      res.status(500).json({error: 'Error retrieving palettes'});
     });
 });
 
 app.post('/api/v1/projects', (req, res) => {
   const project = req.body;
-  db('projects').insert(project, 'id')
-    .then(project => {
-      res.status(201).json({id: project[0] })
-    })
-    .catch(error => {
-      res.status(500).send('Error posting project');
-    });
+  if (project.name) {
+    db('projects').insert(project, 'id')
+      .then(project => {
+        res.status(201).json({id: project[0] })
+      })
+      .catch(error => {
+        res.status(500).send('Error posting project');
+      });
+  } else {
+    res.status(422).send({error: 'Please include a project name'})
+  }
 });
 
 app.post('/api/v1/projects/:project_id/palette', (req, res) => {
   const { project_id } = req.params;
   const palette = req.body;
-  db('palettes').insert({...palette, project_id}, 'id')
-    .then(palette => {
-      res.status(201).json({id: palette[0] })
-    })
-    .catch(error => {
-      res.status(500).send('Error posting palette');
-    });
+  const { name, color1, color2, color3, color4, color5 } = palette;
+  if (name && color1 && color2 && color3 && color4 && color5) {
+    db('palettes').insert({...palette, project_id}, 'id')
+      .then(palette => {
+        res.status(201).json({id: palette[0] })
+      })
+      .catch(error => {
+        res.status(500).send('Error posting palette');
+      });
+  } else {
+    res.status(422).send({error: 'Please include a valid palette'});
+  }
 });
 
 app.delete('/api/v1/projects/:id', (req, res) => {
   const { id } = req.params;
+
   db('projects').where('id', id).del()
     .then(id => res.sendStatus(204))
     .catch(error => res.status(404).send({message: 'project not found'}));
 });
 
-app.delete('/api/v1/projects/:project_id/palette/:paletteId', (req, res) => {
-  const { paletteId, project_id } = req.params;
-  db('palettes').where({id: paletteId, project_id}).del()
+app.delete('/api/v1/palette/:id', (req, res) => {
+  const { id } = req.params;
+  db('palettes').where({id: id}).del()
     .then(palette => {
       res.sendStatus(204)
     })
     .catch(error => {
-      res.status(404).send('palette not found')
+      res.status(404).json({message:'invalid id'})
     });
 });
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
+
+module.exports = { app, db };

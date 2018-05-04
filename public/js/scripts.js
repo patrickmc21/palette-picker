@@ -51,13 +51,17 @@ function animateUpdate(button) {
 
 async function addProject(e) {
   e.preventDefault();
-  if ($('#new-project').val().length > 0) {
-    const project = $('#new-project').val();
+  const project = $('#new-project').val().toLowerCase();
+  if (project.length > 0 && !palette.projects[project]) {
+    $('.invalid-project').addClass('hidden');
     palette.projects[project] = {name: project, palettes: []};
     const { id } = await postProject(palette.projects[project]);
     palette.projects[project] = {name: project, palettes: [], id: id};
     appendProject(project);
     $('#new-project').val('');
+  } else if (palette.projects[project]) {
+    $('.invalid-project').removeClass('hidden');
+    $('.invalid-name').text(project)
   }
 };
 
@@ -86,9 +90,9 @@ async function savePalette(e) {
     };
     const project = $('.project-dropdown').val();
     const paletteId = await postPalette(newPalette, project);
-
-    palette.projects[project].palettes.push({...newPalette, id: paletteId});
-    appendSavedPalette(newPalette, project);
+    console.log(paletteId.id)
+    palette.projects[project].palettes.push({...newPalette, id: paletteId.id});
+    appendSavedPalette({...newPalette, id: paletteId.id}, project);
     $('#palette-name').val('');
   }
 };
@@ -121,14 +125,11 @@ function highlightPalette() {
 
 function removePalette() {
   const { id, project } = $(this).parent().data();
-  console.log(id);
-  console.log($(this).parent().data())
-  const project_id = palette.projects[project].id;
   const palettes = palette.projects[project].palettes.filter(color => color.id !== id);
   palette.projects[project].palettes = palettes;
   $(`.${project}`).empty();
   palettes.forEach(color => appendSavedPalette(color, project));
-  deletePalette(id, project_id);
+  deletePalette(id);
 };
 
 async function getProjects() {
@@ -229,8 +230,8 @@ async function postPalette(savedPalette, project) {
   }
 };
 
-function deletePalette(paletteId, project_id) {
-  const url = `/api/v1/projects/${project_id}/palette/${paletteId}`;
+function deletePalette(paletteId) {
+  const url = `/api/v1/palette/${paletteId}`;
   const options = {
     method: 'DELETE'
   }
