@@ -77,6 +77,7 @@ app.post('/api/v1/projects', (req, res) => {
   }
 });
 
+// set POST route for palettes
 app.post('/api/v1/projects/:project_id/palette', (req, res) => {
   const { project_id } = req.params;
   const palette = req.body;
