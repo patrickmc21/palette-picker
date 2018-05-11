@@ -4,6 +4,8 @@
 
 An application used generate color palettes, and save palettes to project folders. App is built on the front end using jQuery, JavaScript and CSS. Backend is build using Express and Knex. Continuous Integration provided by Travis CI. Test Suite build using Mocha/Chai
 
+View it live [here](https://palettepickerpat.herokuapp.com/)
+
 ## Team
 
 +[Pat McLaughlin](https://github.com/patrickmc21)
